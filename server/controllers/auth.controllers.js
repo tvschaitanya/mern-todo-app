@@ -1,5 +1,5 @@
 import { createError } from "../utils/error.js";
-import { connectToDatabase } from '../utils/connect.utils.js';
+import { connectToDatabase } from '../utils/connect.js';
 import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
