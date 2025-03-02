@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 const connection = { isConnected: null };
 
 export const connectToDatabase = async () => {
@@ -10,6 +11,7 @@ export const connectToDatabase = async () => {
         connection.isConnected = db.connections[0].readyState;
         console.log('Connected to database');
     } catch (error) {
-        console.log("Couldn't connect to DB: ", error);
+        console.log("[ERROR] Couldn't connect to DB: ", error);
+        throw createError(500, 'Database connection failed.');
     }
 };
