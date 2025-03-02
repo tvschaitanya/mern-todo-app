@@ -1,0 +1,27 @@
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── Auth/
+│   │   │   ├── Login.jsx
+│   │   │   └── Register.jsx
+│   │   ├── Layout/
+│   │   │   └── Navbar.jsx
+│   │   └── Todo/
+│   │       ├── Dashboard.jsx
+│   │       ├── TodoEditModal.jsx
+│   │       ├── TodoForm.jsx
+│   │       ├── TodoItem.jsx
+│   │       └── TodoList.jsx
+│   ├── context/
+│   │   ├── auth/
+│   │   │   └── AuthContext.jsx
+│   │   └── todo/
+│   │       └── TodoContext.jsx
+│   ├── App.css
+│   ├── App.jsx
+│   └── index.jsx
+├── public/
+│   └── index.html
+├── .gitignore
+├── package.json
+└── vite.config.js

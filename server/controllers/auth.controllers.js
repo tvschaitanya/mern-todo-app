@@ -103,3 +103,21 @@ export async function logout(req, res) {
     res.clearCookie("access_token");
     res.json({ message: 'Logout successful' });
 }
+
+export const getUserProfile = async (req, res, next) => {
+    try {
+      // req.user should be set by the verifyToken middleware
+      const userId = req.user.userId;
+      
+      // Find user by ID (exclude password)
+      const user = await User.findById(userId).select('-password');
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      return res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  };
