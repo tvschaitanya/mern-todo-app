@@ -78,7 +78,7 @@ export async function login(req, res, next) {
             return next(createError(400, 'Invalid credentials'));
         }
 
-        const token = generateToken(user._id);
+        const token = generateToken(user.id);
 
         console.log("[COOKIE] Setting cookie: access_token=" + token);
         console.log("[SUCCESS] Login successful for:", email);
