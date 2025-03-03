@@ -1,0 +1,58 @@
+.
+├── .DS_Store
+├── .gitignore
+├── frontend
+│   ├── .gitignore
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── assets
+│   │   │   └── react.svg
+│   │   ├── components
+│   │   │   ├── Auth
+│   │   │   │   ├── Login.jsx
+│   │   │   │   └── Register.jsx
+│   │   │   ├── Layout
+│   │   │   │   └── Navbar.jsx
+│   │   │   └── Todo
+│   │   │       ├── Dashboard.jsx
+│   │   │       ├── TodoEditModal.jsx
+│   │   │       ├── TodoForm.jsx
+│   │   │       ├── TodoItem.jsx
+│   │   │       └── TodoList.jsx
+│   │   ├── context
+│   │   │   ├── auth
+│   │   │   │   └── AuthContext.jsx
+│   │   │   └── todo
+│   │   │       └── TodoContext.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   └── vite.config.js
+├── server
+│   ├── .env
+│   ├── controllers
+│   │   ├── auth.controllers.js
+│   │   └── todo.controllers.js
+│   ├── index.js
+│   ├── models
+│   │   ├── todoModel.js
+│   │   └── userModel.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── routes
+│   │   ├── auth.routes.js
+│   │   └── todo.routes.js
+│   └── utils
+│       ├── connect.js
+│       ├── error.js
+│       └── verify.js
+└── tree.txt
+
+17 directories, 39 files
