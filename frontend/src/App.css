@@ -1,4 +1,4 @@
-/* App.css - Enhanced UI/UX */
+/* App.css - Enhanced UI/UX with Filter Support */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -19,6 +19,11 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Priority colors */
+  --priority-high: #ef4444;
+  --priority-medium: #f59e0b;
+  --priority-low: #10b981;
 }
 
 /* Base Styles */
@@ -44,7 +49,9 @@ body {
 .todo-item,
 input[type="submit"],
 button,
-.btn {
+.btn,
+select,
+input[type="date"] {
   transition: var(--transition);
   will-change: transform, opacity, background-color;
 }
@@ -173,6 +180,7 @@ img {
 input[type="text"],
 input[type="email"],
 input[type="password"],
+input[type="date"],
 textarea,
 select {
   width: 100%;
@@ -187,11 +195,29 @@ select {
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
+input[type="date"]:focus,
 textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Date input styling */
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 0.5rem;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: var(--transition);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 textarea {
@@ -311,6 +337,57 @@ button:disabled,
   color: var(--dark-color);
 }
 
+/* Todo Filters */
+.todo-filters {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--dark-color);
+}
+
+.filter-group select {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-color);
+  background-color: white;
+  font-size: 0.875rem;
+}
+
+.reset-filters-btn {
+  padding: 0.625rem 1rem;
+  background-color: var(--light-color);
+  color: var(--dark-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.reset-filters-btn:hover {
+  background-color: #e2e8f0;
+}
+
 .todo-list {
   background-color: white;
   border-radius: 0.5rem;
@@ -391,6 +468,7 @@ button:disabled,
   font-size: 0.8rem;
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
+  transition: var(--transition);
 }
 
 .todo-checkbox:checked {
@@ -466,11 +544,66 @@ button:disabled,
 
 .todo-meta {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-top: 0.75rem;
   margin-left: 2.25rem;
   font-size: 0.75rem;
   color: #94a3b8;
+  gap: 0.5rem;
+}
+
+.todo-meta-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.todo-meta-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Priority Styles */
+.todo-priority {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.text-red-600 {
+  color: white;
+  background-color: var(--priority-high);
+}
+
+.text-yellow-600 {
+  color: #78350f;
+  background-color: #fef3c7;
+}
+
+.text-green-600 {
+  color: white;
+  background-color: var(--priority-low);
+}
+
+.text-gray-600 {
+  color: #475569;
+  background-color: #f1f5f9;
+}
+
+/* Due Date Styling */
+.todo-due-date {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #f1f5f9;
+  font-weight: 500;
 }
 
 /* Modal */
@@ -486,6 +619,12 @@ button:disabled,
   justify-content: center;
   padding: 1rem;
   z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-content {
@@ -495,6 +634,14 @@ button:disabled,
   width: 100%;
   max-width: 500px;
   box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-header {
@@ -609,6 +756,21 @@ button:disabled,
     margin: 1rem;
   }
   
+  .todo-filters {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+  
+  .filter-group {
+    width: 100%;
+  }
+  
+  .reset-filters-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
   .todo-item-header {
     flex-direction: column;
     align-items: flex-start;
@@ -619,8 +781,14 @@ button:disabled,
     margin-left: 2.25rem;
   }
   
+  .todo-meta {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
   .modal-content {
     padding: 1.5rem;
     margin: 1rem;
+    max-height: 85vh;
   }
 }

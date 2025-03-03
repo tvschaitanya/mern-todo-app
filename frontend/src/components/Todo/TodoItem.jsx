@@ -4,7 +4,16 @@ import { useTodo } from '../../context/todo/TodoContext';
 const TodoItem = ({ todo }) => {
   const { deleteTodo, setCurrent, updateTodo } = useTodo();
   
-  const { _id, title, description, isCompleted, createdAt, updatedAt } = todo;
+  const { 
+    _id, 
+    title, 
+    description, 
+    isCompleted, 
+    createdAt, 
+    updatedAt, 
+    dueDate,
+    priority 
+  } = todo;
 
   const onDelete = () => {
     deleteTodo(_id);
@@ -23,13 +32,23 @@ const TodoItem = ({ todo }) => {
 
   // Format date from ISO string
   const formatDate = (dateString) => {
+    if (!dateString) return 'No date';
     const options = { 
       month: 'short', 
       day: 'numeric', 
-      hour: '2-digit', 
-      minute: '2-digit'
+      year: 'numeric'
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  // Get priority color
+  const getPriorityColor = () => {
+    switch(priority) {
+      case 'high': return 'text-red-600';
+      case 'medium': return 'text-yellow-600';
+      case 'low': return 'text-green-600';
+      default: return 'text-gray-600';
+    }
   };
 
   return (
@@ -71,8 +90,20 @@ const TodoItem = ({ todo }) => {
       )}
       
       <div className="todo-meta">
-        <span>Created: {formatDate(createdAt)}</span>
-        <span>Updated: {formatDate(updatedAt)}</span>
+        <div className="todo-meta-dates">
+          <span>Created: {formatDate(createdAt)}</span>
+          <span>Updated: {formatDate(updatedAt)}</span>
+        </div>
+        <div className="todo-meta-details">
+          {dueDate && (
+            <span className="todo-due-date">
+              Due: {formatDate(dueDate)}
+            </span>
+          )}
+          <span className={`todo-priority ${getPriorityColor()}`}>
+            {priority.charAt(0).toUpperCase() + priority.slice(1)} Priority
+          </span>
+        </div>
       </div>
     </div>
   );

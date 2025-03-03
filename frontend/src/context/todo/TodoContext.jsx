@@ -17,14 +17,22 @@ export const TodoProvider = ({ children }) => {
   // Set up axios with credentials
   axios.defaults.withCredentials = true;
 
-  // Get all todos
-  const getTodos = async () => {
+  // Get all todos with optional filtering and sorting
+  const getTodos = async (queryParams = {}) => {
     if (!isAuthenticated) return;
     
     try {
       setLoading(true);
       
-      const res = await axios.get('/api/todos');
+      // Construct query string
+      const queryString = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(queryParams).filter(([_, v]) => v != null)
+        )
+      ).toString();
+      
+      const res = await axios.get(`/api/todos${queryString ? `?${queryString}` : ''}`);
+      
       console.log('Todos fetched:', res.data);
       
       setTodos(res.data);
@@ -46,7 +54,7 @@ export const TodoProvider = ({ children }) => {
       // The todo object to be sent to the server
       const todoToAdd = {
         ...todoData
-        // We don't need to add userID here, as the backend will extract it from the JWT token
+        // Backend will extract userID from JWT token
       };
       
       console.log('Adding todo:', todoToAdd);
@@ -160,6 +168,13 @@ export const TodoProvider = ({ children }) => {
   );
 };
 
-export const useTodo = () => useContext(TodoContext);
+// Custom hook to use the TodoContext
+export const useTodo = () => {
+  const context = useContext(TodoContext);
+  if (!context) {
+    throw new Error('useTodo must be used within a TodoProvider');
+  }
+  return context;
+};
 
 export default TodoContext;

@@ -6,12 +6,17 @@ const TodoForm = () => {
   
   const [todo, setTodo] = useState({
     title: '',
-    description: ''
+    description: '',
+    dueDate: '',
+    priority: 'medium'
   });
 
-  const { title, description } = todo;
+  const { title, description, dueDate, priority } = todo;
 
-  const onChange = e => setTodo({ ...todo, [e.target.name]: e.target.value });
+  const onChange = e => setTodo({ 
+    ...todo, 
+    [e.target.name]: e.target.value 
+  });
 
   const onSubmit = e => {
     e.preventDefault();
@@ -22,13 +27,17 @@ const TodoForm = () => {
     
     addTodo({
       title,
-      description
+      description,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+      priority
     });
     
     // Clear form
     setTodo({
       title: '',
-      description: ''
+      description: '',
+      dueDate: '',
+      priority: 'medium'
     });
   };
 
@@ -57,6 +66,29 @@ const TodoForm = () => {
             onChange={onChange}
             placeholder="Task description..."
           />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="dueDate">Due Date (optional)</label>
+          <input
+            id="dueDate"
+            type="date"
+            name="dueDate"
+            value={dueDate}
+            onChange={onChange}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="priority">Priority</label>
+          <select
+            id="priority"
+            name="priority"
+            value={priority}
+            onChange={onChange}
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
         </div>
         <button 
           type="submit" 

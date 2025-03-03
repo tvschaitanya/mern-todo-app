@@ -24,11 +24,36 @@ async function isValidTodoId(id, userId) {
     return null; // No error, ID is valid
 }
 
-// Function to get all todos for a user
+// Function to get all todos for a user with sorting and filtering
 export async function getAllTodos(req, res, next) {
     try {
         await connectToDatabase();
-        const todos = await Todo.find({ userID: req.user.id }).sort({ createdAt: -1 });
+        
+        // Build query object
+        const query = { userID: req.user.id };
+        
+        // Optional filtering
+        if (req.query.isCompleted !== undefined) {
+            query.isCompleted = req.query.isCompleted === 'true';
+        }
+        
+        if (req.query.priority) {
+            query.priority = req.query.priority;
+        }
+
+        // Sorting options
+        const sortOptions = {};
+        const { sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
+        
+        // Map sort fields
+        const validSortFields = ['createdAt', 'dueDate', 'priority'];
+        if (validSortFields.includes(sortBy)) {
+            sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+        }
+
+        // Fetch todos
+        const todos = await Todo.find(query).sort(sortOptions);
+        
         res.status(200).json(todos);
     } catch (error) {
         next(createError(500, "Failed to retrieve todos"));
@@ -60,13 +85,22 @@ export async function updateTodo(req, res, next) {
         await connectToDatabase();
         const todo = await Todo.findById(req.params.id);
 
-        // Preserve existing data and update only provided fields
+        // Update fields
         todo.title = req.body.title || todo.title;
         todo.description = req.body.description || todo.description;
         
-        // Explicitly handle isCompleted to ensure it's set correctly
+        // Handle isCompleted
         if (req.body.isCompleted !== undefined) {
             todo.isCompleted = req.body.isCompleted;
+        }
+        
+        // New fields
+        if (req.body.dueDate !== undefined) {
+            todo.dueDate = req.body.dueDate ? new Date(req.body.dueDate) : null;
+        }
+        
+        if (req.body.priority) {
+            todo.priority = req.body.priority;
         }
         
         // Update the timestamp
@@ -117,7 +151,9 @@ export async function createTodo(req, res, next) {
             title: req.body.title,
             description: req.body.description || '', // Optional description
             userID: req.user.id,
-            isCompleted: false // Default to not completed
+            isCompleted: false, // Default to not completed
+            dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
+            priority: req.body.priority || 'medium'
         });
 
         // Save and return the new todo
