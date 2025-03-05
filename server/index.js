@@ -36,8 +36,10 @@ app.use("/api/user", AuthRoute);
 app.use("/api/todos", TodoRoute);
 
 app.get('/', (req, res, next) => {
-  res.send('Hello World!');
+  res.setHeader('Content-Type', 'text/html');  // Ensure HTML response
+  res.send('Welcome to TODO API,<br>Please test using Postman...');
 });
+
 
 //Global Error Handler
 app.use((error, req, res, next) => {
