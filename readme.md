@@ -4,9 +4,8 @@ A full-stack todo application with user authentication, built with React (fronte
 
 ## Screenshots
 
-![Todo App Dashboard](./Screenshot%20-%20Dashboard.jpeg)
-
 ![Todo App Login Page](./Screenshot%20-%20Login%20Page.jpeg)
+![Todo App Dashboard](./Screenshot%20-%20Dashboard.jpeg)
 
 ## Project Structure
 
