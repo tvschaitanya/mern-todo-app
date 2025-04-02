@@ -1,17 +1,14 @@
-trtree -a -I 'node_modules|.git|dist|build|coverage' --prune
-
 .
-├── .DS_Store
-├── .gitignore
+├── docker-compose.yml
 ├── frontend
-│   ├── .gitignore
-│   ├── README.md
+│   ├── Dockerfile
 │   ├── eslint.config.js
 │   ├── index.html
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── public
 │   │   └── vite.svg
+│   ├── README.md
 │   ├── src
 │   │   ├── App.css
 │   │   ├── App.jsx
@@ -37,11 +34,13 @@ trtree -a -I 'node_modules|.git|dist|build|coverage' --prune
 │   │   ├── index.css
 │   │   └── main.jsx
 │   └── vite.config.js
+├── package-lock.json
+├── project_structure.txt
 └── server
-    ├── .env
     ├── controllers
     │   ├── auth.controllers.js
     │   └── todo.controllers.js
+    ├── Dockerfile
     ├── index.js
     ├── models
     │   ├── todoModel.js
@@ -56,4 +55,4 @@ trtree -a -I 'node_modules|.git|dist|build|coverage' --prune
         ├── error.js
         └── verify.js
 
-17 directories, 38 files
+17 directories, 39 files
