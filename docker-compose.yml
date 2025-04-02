@@ -1,0 +1,108 @@
+version: "3"
+
+services:
+  # MongoDB service
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./docker-logs:/logs
+    networks:
+      - mern-network
+    command: mongod --quiet --logpath /logs/mongodb.log
+
+  # Backend service
+  server:
+    build:
+      context: ./server
+    container_name: mern-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/todo-app
+      - PORT=3000
+    env_file:
+      - ./server/.env
+    depends_on:
+      - mongodb
+    networks:
+      - mern-network
+    volumes:
+      - ./docker-logs:/logs
+    # Use a wrapper script to format logs nicely
+    command: >
+      sh -c "
+        echo '[BACKEND] Starting server...' > /logs/backend.log &&
+        echo '----------------------------------------------------' >> /logs/backend.log &&
+        echo '[BACKEND] Time: $$(date)' >> /logs/backend.log &&
+        echo '----------------------------------------------------' >> /logs/backend.log &&
+        node index.js | sed 's/^/[BACKEND] /' | tee -a /logs/backend.log
+      "
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+    container_name: mern-frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - server
+    networks:
+      - mern-network
+    volumes:
+      - ./docker-logs:/logs
+    # Use a wrapper script to format logs nicely
+    command: >
+      sh -c "
+        echo '[FRONTEND] Starting Vite dev server...' > /logs/frontend.log &&
+        echo '----------------------------------------------------' >> /logs/frontend.log &&
+        echo '[FRONTEND] Time: $$(date)' >> /logs/frontend.log &&
+        echo '----------------------------------------------------' >> /logs/frontend.log &&
+        npm run dev | sed 's/^/[FRONTEND] /' | tee -a /logs/frontend.log
+      "
+
+  # Status service - provides a clean summary
+  status:
+    image: alpine
+    container_name: mern-status
+    depends_on:
+      - mongodb
+      - server
+      - frontend
+    volumes:
+      - ./docker-logs:/logs
+    command: >
+      sh -c "
+        mkdir -p /logs &&
+        sleep 10 &&
+        echo '' &&
+        echo '╔══════════════════════════════════════════════════════════════╗' &&
+        echo '║ 🚀 MERN Todo App is now running!                             ║' &&
+        echo '╠══════════════════════════════════════════════════════════════╣' &&
+        echo '║ ✅ Frontend: http://localhost:5173                          ║' &&
+        echo '║ ✅ Backend API: http://localhost:3000                       ║' &&
+        echo '║ ✅ MongoDB: mongodb://localhost:27017/todo-app              ║' &&
+        echo '╠══════════════════════════════════════════════════════════════╣' &&
+        echo '║ 📋 Logs saved in ./docker-logs directory:                   ║' &&
+        echo '║   - docker-logs/mongodb.log                                 ║' &&
+        echo '║   - docker-logs/backend.log                                 ║' &&
+        echo '║   - docker-logs/frontend.log                                ║' &&
+        echo '╚══════════════════════════════════════════════════════════════╝' &&
+        echo '' &&
+        echo 'Press Ctrl+C to stop all services'
+      "
+
+networks:
+  mern-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
