@@ -2,6 +2,12 @@
 
 A full-stack todo application with user authentication, built with React (frontend) and Node.js (backend).
 
+## Screenshots
+
+![Todo App Dashboard](./Screenshot%20-%20Dashboard.jpeg)
+
+![Todo App Login Page](./Screenshot%20-%20Login%20Page.jpeg)
+
 ## Project Structure
 
 The project is organized into two main parts:
@@ -116,7 +122,3 @@ After running `docker-compose up`, open your browser and navigate to `http://loc
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
